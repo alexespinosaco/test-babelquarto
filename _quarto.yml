@@ -1,0 +1,35 @@
+project:
+  type: website
+
+website:
+  site-url: http://alexespinosaco.github.io/test-babelquarto
+  title: "Probando babelquarto"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+execute:
+  freeze: auto
+
+
+babelquarto:
+  languagelinks: navbar
+  languagecodes:
+  - name: en
+    text: "English"
+  - name: es
+    text: "Español"
+  mainlanguage: 'es'
+  languages: ['en']
+title-en: "Trying babelquarto"
+description-en: description in en
+author-en: author in en
+lang: es
