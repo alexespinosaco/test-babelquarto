@@ -34,7 +34,7 @@ jobs:
             github::ropensci-review-tools/babelquarto@a485fea
 
       - name: Render Website with babelquarto
-        run: Rscript -e 'babelquarto::render_book()'
+        run: Rscript -e 'babelquarto::render_book(site_url="https://alexespinosaco.github.io/test-babelquarto/en/")'
 
       - name: Achive website render
         uses: actions/upload-artifact@v4
