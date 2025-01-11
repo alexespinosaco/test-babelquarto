@@ -1,53 +1,35 @@
+name: Render Book
+permissions: write-all
 on:
-  workflow_dispatch:
   push:
     branches: main
-
-name: Quarto Publish
-
 jobs:
-  build-deploy:
+  render:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-
-      - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
-        with:
-          version: pre-release
-
-      # install libcurl, needed for curl R package
-      - name: Install R package deps
-        run: |
-          sudo apt-get update
-          sudo apt-get install libcurl4-openssl-dev
-
+      - uses: actions/checkout@v4
       - name: Install R
         uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: '4.3.2'
-
-      - name: Install R Dependencies
-        uses: r-lib/actions/setup-renv@v2
-        with:
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+      - name: Set up R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2 
+        with: 
           packages: |
             github::ropensci-review-tools/babelquarto@a485fea
-
-      - name: Render book
+      - name: Render Book with babelquarto
         run: Rscript -e 'babelquarto::render_website()'
-        
-      - name: git config
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "gh-pages committer"
-          
-      - name: Commit results
-        run: |
-          cd _site
-          git init
-          git add .
-          git commit -m 'update website'
-          git push https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git HEAD:gh-pages --force
+      - name: Achive book render
+        uses: actions/upload-artifact@v4
+        with:
+          name: book_render
+          path: _book/
+      - name: Publish
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+          render: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
