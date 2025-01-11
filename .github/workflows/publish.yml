@@ -33,7 +33,8 @@ jobs:
       - name: Install R Dependencies
         uses: r-lib/actions/setup-renv@v2
         with:
-          cache-version: 1
+          packages: |
+            github::ropensci-review-tools/babelquarto@a485fea
 
       - name: Render book
         run: Rscript -e 'babelquarto::render_website()'
