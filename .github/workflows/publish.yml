@@ -36,6 +36,12 @@ jobs:
       - name: Render Website with babelquarto
         run: Rscript -e 'babelquarto::render_book()'
 
+      - name: Achive website render
+        uses: actions/upload-artifact@v4
+        with:
+          name: website_render
+          path: _site/
+
       - name: Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
